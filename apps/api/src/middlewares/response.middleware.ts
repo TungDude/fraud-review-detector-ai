@@ -8,7 +8,7 @@ export const responseFormatterMiddleware = (
 ) => {
     res.sendResponse = <T>(
         status: number,
-        data: T | null,
+        data: T,
         message: string | null = null
     ) => {
         return sendResponse<T>(res, status, data, message);

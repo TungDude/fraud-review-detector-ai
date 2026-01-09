@@ -7,7 +7,7 @@ export const asyncHandler = (fn: AsyncHandler) => {
         Promise.resolve(fn(req, res, next)).catch((error) => {
             const status = error.status || 500;
             const message = error.message || "Internal Server Error";
-            res.sendResponse(status, null, message);
+            res.sendResponse(status, {}, message);
         });
     };
 };
