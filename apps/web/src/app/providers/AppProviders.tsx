@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "@/app/lib/query-client";
+import { queryClient } from "@/lib/query-client";
 import { BrowserRouter } from "react-router-dom";
 
 interface AppProvidersProps {
