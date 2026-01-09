@@ -21,8 +21,10 @@ cd apps/model
 # Create .venv for the first time
 uv venv
 
-# Activate the environment
+# Activate the environment (MacOS)
 source .venv/bin/activate
+# Activate the environment (Window)
+.venv\Scripts\activate
 
 # 2. Install dependencies
 uv sync
@@ -32,8 +34,10 @@ uv sync
 To run scripts or notebooks, make sure your environment is activated:
 
 ```bash
-# Activate the environment
+# Activate the environment (MacOS)
 source .venv/bin/activate
+# Activate the environment (Window)
+.venv\Scripts\activate
 ```
 
 To add additional dependencies
