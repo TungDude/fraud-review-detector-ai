@@ -8,25 +8,51 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  CUSTOMER @map("customer")
+  MERCHANT @map("merchant")
+}
+
 model User {
   userId    String   @id @default(uuid()) @map("user_id") @db.Uuid
   username  String   @unique
+  role      UserRole @default(CUSTOMER)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  posts    Post[]
+  comments Comment[]
+
+  @@index([username], name: "idx_user_username")
+  @@index([role], name: "idx_user_role")
+}
+
+model Post {
+  postId    String   @id @default(uuid()) @map("post_id") @db.Uuid
+  authorId  String   @map("author_id") @db.Uuid
+  title     String
+  content   String
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
   comments Comment[]
+  author   User      @relation(fields: [authorId], references: [userId], onDelete: Cascade)
 
-  @@index([username], name: "idx_user_username")
+  @@index([authorId], name: "idx_post_author_id")
 }
 
 model Comment {
   commentId String   @id @default(uuid()) @map("comment_id") @db.Uuid
+  postId    String   @map("post_id") @db.Uuid
   userId    String   @map("user_id") @db.Uuid
   text      String
+  rating    Float
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
+  post Post @relation(fields: [postId], references: [postId], onDelete: Cascade)
   user User @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
   @@index([userId], name: "idx_comment_user_id")
+  @@index([postId], name: "idx_comment_post_id")
 }
