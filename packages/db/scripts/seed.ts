@@ -93,7 +93,7 @@ async function seed() {
 
             const commentsData = [
                 {
-                    text: "Looks great!",
+                    text: "Product is Great! Highly recommend.",
                     userId: userIdMap["JohnDoe69"],
                     postId: postIdMap["Sweatshirt for sale!"],
                     rating: 4.5,
@@ -105,10 +105,28 @@ async function seed() {
                     rating: 5,
                 },
                 {
+                    text: "Hello my name is John, I am single and I want to meet you. Contact me at john@doe.com",
+                    userId: userIdMap["JohnDoe69"],
+                    postId: postIdMap["Sweatshirt for sale!"],
+                    rating: 0,
+                    isFraud: true,
+                    fraudScore: 0.95,
+                    evaluatedAt: new Date(),
+                },
+                {
                     text: "Is it still available?",
                     userId: userIdMap["JaneDoe555"],
                     postId: postIdMap["Vintage T-Shirt"],
                     rating: 4,
+                },
+                {
+                    text: "I want to buy this now!!! Visit www.buycheapstuff.com for amazing deals!",
+                    userId: userIdMap["JaneDoe555"],
+                    postId: postIdMap["Vintage T-Shirt"],
+                    rating: 4,
+                    isFraud: true,
+                    fraudScore: 0.75,
+                    evaluatedAt: new Date(),
                 },
                 {
                     text: "Can you provide more pictures?",
@@ -132,6 +150,9 @@ async function seed() {
                         postId: comment.postId!,
                         userId: comment.userId!,
                         rating: comment.rating,
+                        isFraud: comment.isFraud || false,
+                        fraudScore: comment.fraudScore || null,
+                        evaluatedAt: comment.evaluatedAt || null,
                     },
                 });
 
