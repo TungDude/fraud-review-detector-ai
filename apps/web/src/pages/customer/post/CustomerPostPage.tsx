@@ -65,7 +65,7 @@ export default function CustomerPostPage() {
 
     return (
         <Stack component="section" spacing={3}>
-            {post && <Post post={post} showStats={false} />}
+            {post && <Post post={post} showStats={{ rating: true, fraudPercentage: true }} />}
             {(isError || !isEnabled) && (
                 <Alert severity="error">
                     {error instanceof Error

@@ -6,11 +6,15 @@ import type { IPostWithRelations } from "@repo/shared-types";
 
 export interface PostListProps {
     posts: IPostWithRelations[];
-    showStats?: boolean;
+    showStats?: {
+        rating?: boolean;
+        comments?: boolean;
+        fraudPercentage?: boolean;
+    };
     maxHeight?: number;
 };
 
-export default function PostList({ posts, showStats = true, maxHeight }: Readonly<PostListProps>) {
+export default function PostList({ posts, showStats = { rating: true, comments: true, fraudPercentage: true }, maxHeight }: Readonly<PostListProps>) {
     const navigate = useNavigate();
 
     const handlePostClick = (post: IPostWithRelations) => {
@@ -22,7 +26,7 @@ export default function PostList({ posts, showStats = true, maxHeight }: Readonl
             maxHeight={maxHeight}
             sx={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(400px, 1fr))",
+                gridTemplateColumns: "repeat(auto-fill, minmax(500px, 1fr))",
                 gap: 2,
                 overflowY: maxHeight ? "auto" : "visible",
                 p: 2,
