@@ -3,6 +3,7 @@ import { useParams, useLocation } from "react-router-dom";
 import {
     Alert,
     Stack,
+    Divider,
     CircularProgress,
     Typography,
 } from "@mui/material";
@@ -44,7 +45,8 @@ export default function MerchantPostPage() {
 
             {!isLoading && !isError && (
                 <Stack spacing={2}>
-                    <Typography variant="h5" fontWeight="bold">
+                    <Divider />
+                    <Typography variant="h5" fontWeight="bold" paddingX={2}>
                         Comments ({comments?.length || 0})
                     </Typography>
                     <CommentList comments={comments || []} maxHeight={420} />

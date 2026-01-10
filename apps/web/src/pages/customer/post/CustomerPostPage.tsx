@@ -82,11 +82,13 @@ export default function CustomerPostPage() {
 
             {!isLoading && !isError && (
                 <Stack spacing={2}>
+                    <Divider />
                     <Box
                         display="flex"
                         justifyContent="space-between"
                         alignItems="center"
                         gap={1}
+                        paddingX={2}
                     >
                         <Typography variant="h5" fontWeight="bold">
                             Comments ({comments?.length || 0})
