@@ -4,6 +4,9 @@
 
 @theme {
   --font-main: 'Inter', 'Noto Sans Thai', sans-serif;
+  --color-star-yellow: #FFC107;
+  --color-mui-primary: #1976d2;
+  --color-mui-error: #d32f2f;
 }
 
 @layer base {
