@@ -10,6 +10,9 @@ export interface IComment {
     userId: string;
     text: string;
     rating: number;
+    isFraud: boolean;
+    fraudScore: number | null;
+    evaluatedAt: string | null;
     createdAt: string;
     updatedAt: string;
 }

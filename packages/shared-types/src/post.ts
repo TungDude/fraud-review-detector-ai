@@ -7,12 +7,21 @@ export interface IPost {
     content: string;
     createdAt: string;
     updatedAt: string;
+}
+
+export interface IPostWithStats extends IPost {
     stats: {
         commentsCount: number;
+        fraudCommentsPercentage: number | null;
         averageRating: number | null;
     }
 }
 
-export interface IPostWithRelations extends IPost {
+export interface IPostWithRelations extends IPostWithStats {
     author: IUser;
+}
+
+export interface ICreatePostRequest {
+    title: string;
+    content: string;
 }
