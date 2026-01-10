@@ -6,4 +6,9 @@ export const postService = {
         const response = await apiClient.get<ApiResponse<IPostWithRelations[]>>("/posts");
         return response.data.data;
     },
+
+    getMerchantPosts: async (): Promise<IPostWithRelations[]> => {
+        const response = await apiClient.get<ApiResponse<IPostWithRelations[]>>("/posts/merchant");
+        return response.data.data;
+    },
 }
