@@ -13,7 +13,7 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
     try {
         const user = jwt.verify(token, config.jwtSecret) as IAuth;
 
-        if (!user?.userId) {
+        if (!user?.userId || !user?.role) {
             throw new ApiError("Unauthorized", 401);
         }
 
