@@ -10,7 +10,7 @@ import { PATHS } from '@/app/routes/paths';
 
 const povs = [
     { label: "Customer", username: "JohnDoe69", role: "customer" },
-    { label: "Merchant", username: "MerchKing67", role: "merchant" },
+    { label: "Merchant", username: "SweatyShop888", role: "merchant" },
 ]
 
 export default function AuthenticationPage() {
@@ -73,7 +73,7 @@ export default function AuthenticationPage() {
                             {pov.label}
                         </Button>
                     ))}
-                    <Button variant="contained" color="success">
+                    <Button variant="contained" color="error">
                         Admin
                     </Button>
                 </Stack>
