@@ -1,9 +1,12 @@
 import {
+    useQueryClient,
     useQuery,
+    useMutation,
     type UseQueryResult,
+    type UseMutationResult,
 } from '@tanstack/react-query';
 import { postService } from '@/services/post-service';
-import type { IPostWithRelations } from '@repo/shared-types';
+import type { IPostWithRelations, IPost, ICreatePostRequest } from '@repo/shared-types';
 import { config } from '@/app/config/env';
 
 export const postKeys = {
@@ -32,5 +35,21 @@ export const useMerchantPosts = (userId: string): UseQueryResult<
         queryKey: postKeys.merchant(userId),
         queryFn: () => postService.getMerchantPosts(),
         staleTime: config.defaultQueryStaleTime,
+    });
+}
+
+export const useCreatePost = (userId: string): UseMutationResult<
+    IPost,
+    unknown,
+    ICreatePostRequest,
+    unknown
+> => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: ICreatePostRequest) => postService.createPost(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: postKeys.merchant(userId) });
+        },
     });
 }
