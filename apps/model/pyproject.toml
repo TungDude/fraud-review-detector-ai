@@ -13,4 +13,8 @@ dependencies = [
     "scikit-learn>=1.8.0",
     "torch>=2.9.1",
     "tqdm>=4.67.1",
+    "unsloth[colab-new]",
 ]
+
+[tool.uv.sources]
+unsloth = { git = "https://github.com/unslothai/unsloth.git" }
