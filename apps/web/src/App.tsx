@@ -6,6 +6,7 @@ import AuthenticationPage from './pages/AuthenticationPage';
 import CustomerPage from './pages/customer/CustomerPage';
 import CustomerPostPage from './pages/customer/post/CustomerPostPage';
 import MerchantPage from './pages/merchant/MerchantPage';
+import MerchantPostPage from './pages/merchant/post/MerchantPostPage';
 import { PATHS } from './app/routes/paths';
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
 
           <Route element={<ProtectedRoute roles={["MERCHANT"]} />}>
             <Route path={PATHS.merchant} element={<MerchantPage />} />
+            <Route path={PATHS.merchantPost} element={<MerchantPostPage />} />
           </Route>
         </Route>
       </Route>

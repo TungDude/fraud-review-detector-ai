@@ -42,13 +42,16 @@ model Post {
 }
 
 model Comment {
-  commentId String   @id @default(uuid()) @map("comment_id") @db.Uuid
-  postId    String   @map("post_id") @db.Uuid
-  userId    String   @map("user_id") @db.Uuid
-  text      String
-  rating    Float
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  commentId   String    @id @default(uuid()) @map("comment_id") @db.Uuid
+  postId      String    @map("post_id") @db.Uuid
+  userId      String    @map("user_id") @db.Uuid
+  text        String
+  rating      Float
+  isFraud     Boolean   @default(false) @map("is_fraud")
+  fraudScore  Float?    @map("fraud_score")
+  evaluatedAt DateTime? @map("evaluated_at") @db.Timestamptz
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz
 
   post Post @relation(fields: [postId], references: [postId], onDelete: Cascade)
   user User @relation(fields: [userId], references: [userId], onDelete: Cascade)

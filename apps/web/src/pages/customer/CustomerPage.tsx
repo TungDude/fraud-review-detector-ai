@@ -39,7 +39,7 @@ export default function CustomerPage() {
                         letterSpacing: 1.2,
                     }}
                 >
-                    Product Listings
+                    Post Listings
                 </Typography>
                 <Tooltip
                     title="Refresh Posts"
@@ -73,7 +73,7 @@ export default function CustomerPage() {
             )}
 
             {!isLoading && !isError && (
-                <PostList posts={posts || []} maxHeight={600} />
+                <PostList posts={posts || []} maxHeight={600} showStats={{ rating: true, comments: true }} />
             )}
         </Stack>
     );

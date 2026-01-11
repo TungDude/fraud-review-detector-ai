@@ -11,6 +11,7 @@ import type {
     ICommentWithRelations,
     ICreateCommentRequest
 } from '@repo/shared-types';
+import { postKeys } from './usePostQuery';
 import { config } from '@/app/config/env';
 
 export const commentKeys = {
@@ -43,6 +44,8 @@ export const useCreateComment = (postId: string): UseMutationResult<
         mutationFn: (data: Omit<ICreateCommentRequest, 'postId'>) => commentService.createComment({ ...data, postId }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: commentKeys.list(postId) });
+            queryClient.invalidateQueries({ queryKey: postKeys.lists() });
+            queryClient.invalidateQueries({ queryKey: postKeys.merchants() });
         },
     });
 }

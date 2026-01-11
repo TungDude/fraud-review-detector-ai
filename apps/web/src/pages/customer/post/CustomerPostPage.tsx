@@ -65,7 +65,7 @@ export default function CustomerPostPage() {
 
     return (
         <Stack component="section" spacing={3}>
-            {post && <Post post={post} showStats={false} />}
+            {post && <Post post={post} showStats={{ rating: true, fraudPercentage: true }} />}
             {(isError || !isEnabled) && (
                 <Alert severity="error">
                     {error instanceof Error
@@ -82,11 +82,13 @@ export default function CustomerPostPage() {
 
             {!isLoading && !isError && (
                 <Stack spacing={2}>
+                    <Divider />
                     <Box
                         display="flex"
                         justifyContent="space-between"
                         alignItems="center"
                         gap={1}
+                        paddingX={2}
                     >
                         <Typography variant="h5" fontWeight="bold">
                             Comments ({comments?.length || 0})

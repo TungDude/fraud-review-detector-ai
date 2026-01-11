@@ -4,6 +4,7 @@ export const PATHS = {
   customer: "/customer",
   customerPost: "/customer/post/:postId",
   merchant: "/merchant",
+  merchantPost: "/merchant/post/:postId",
   dashboard: "/dashboard",
 } as const;
 

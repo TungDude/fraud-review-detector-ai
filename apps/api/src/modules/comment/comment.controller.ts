@@ -22,6 +22,6 @@ export const createComment = asyncHandler(async (req: Request, res: Response) =>
         throw new ApiError("postId, text and rating are required", 400);
     }
 
-    const commnet = await CommentService.createComment(user!.userId, postId, text, rating);
-    res.sendResponse(201, commnet, "Comment created successfully");
+    const comment = await CommentService.createComment(user!.userId, postId, text, rating);
+    res.sendResponse(201, comment, "Comment created successfully");
 });
