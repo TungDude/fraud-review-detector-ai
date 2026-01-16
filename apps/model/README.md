@@ -2,9 +2,9 @@
 
 This directory contains the machine learning components of the project, including data processing, model exploration (notebooks), training pipelines, and production inference code.
 
-## Quick Start
+## Quick Start (Local Development)
 
-This section of the project uses **uv** for fast Python package management and version handling.
+This project uses **GGUF** for efficient inference on consumer hardware. To get GPU acceleration on your Mac (Metal) or Linux (CUDA), use the provided Makefile.
 
 ### 1. Prerequisites
 Ensure you have `uv` installed.
@@ -13,38 +13,54 @@ pip install uv
 ```
 
 ### 2. Setup Environment
-Navigate to this directory and run these commands. This will automatically download the correct Python version (as defined in `.python-version`) and create a virtual environment.
+Navigate to this directory and run the setup command for your OS.
 
+**For Mac (Apple Silicon):**
 ```bash
-cd apps/model
-
-# Create .venv for the first time
-uv venv
-
-# Activate the environment (MacOS)
-source .venv/bin/activate
-# Activate the environment (Window)
-.venv\Scripts\activate
-
-# 2. Install dependencies
-uv sync
+make setup-mac
 ```
 
-### 3. Active Development
-To run scripts or notebooks, make sure your environment is activated:
-
+**For Linux (NVIDIA GPU):**
 ```bash
-# Activate the environment (MacOS)
-source .venv/bin/activate
-# Activate the environment (Window)
-.venv\Scripts\activate
+make setup-linux
 ```
 
-To add additional dependencies
+### 3. Add the Model
+Place your `.gguf` file in the following location:
+`apps/model/prod/model/typhoon2.5-qwen3-4b.Q4_K_M.gguf`
 
+### 4. Run Locally
 ```bash
-# Activate the environment
-uv add <dependencies>
+make run-local
+```
+
+---
+
+## Production Inference Server (Docker)
+
+The model is packaged in a lightweight Docker container. Note that Docker on Mac runs on **CPU only**. For GPU speed, deploy to a Linux server with NVIDIA or run locally.
+
+### 1. Build and Run (from Project Root)
+```bash
+docker-compose up --build model
+```
+
+### 2. Testing the API
+Once the server is running and logs show `Model loaded successfully`, you can test it:
+
+**Interactive UI:**
+Visit [http://localhost:8000/docs](http://localhost:8000/docs) in your browser.
+
+**Using curl:**
+```bash
+curl -X 'POST' \
+  'http://localhost:8000/predict' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "product_title": "Home Life Storage Ottoman",
+  "review_title": "Very nice!",
+  "review_text": "I love it. It is well made, roomy and attractive. Great value."
+}'
 ```
 
 ---

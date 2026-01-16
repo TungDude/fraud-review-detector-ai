@@ -1,0 +1,1 @@
+# Download the model.zip from google drive then extract it into this folder.

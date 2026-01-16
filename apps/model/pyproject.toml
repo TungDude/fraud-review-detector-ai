@@ -5,19 +5,20 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "fastapi>=0.128.0",
+    "fastapi>=0.110.0",
+    "uvicorn>=0.27.0",
+    "pydantic>=2.6.0",
+    "llama-cpp-python>=0.2.56",
+]
+
+[dependency-groups]
+dev = [
     "ipykernel>=7.1.0",
     "ipywidgets>=8.1.8",
-    "ollama>=0.6.1",
     "pandas>=2.3.3",
     "pyarrow>=22.0.0",
-    "pydantic>=2.12.5",
     "scikit-learn>=1.8.0",
     "torch>=2.9.1",
     "tqdm>=4.67.1",
-    "unsloth[colab-new]",
-    "uvicorn>=0.40.0",
+    "unsloth>=2026.1.3",
 ]
-
-[tool.uv.sources]
-unsloth = { git = "https://github.com/unslothai/unsloth.git" }

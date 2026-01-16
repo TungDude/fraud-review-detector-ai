@@ -42,4 +42,5 @@ yarn-error.log*
 apps/model/dataset/**
 apps/model/dev/model/**
 
-typhoon_fake_review_detector
+apps/model/prod/model/typhoon2.5-qwen3-4b.Q4_K_M.gguf
+apps/model/Makefile

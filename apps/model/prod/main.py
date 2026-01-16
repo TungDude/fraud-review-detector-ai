@@ -1,35 +1,38 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from unsloth import FastLanguageModel
-import torch
+from llama_cpp import Llama
 import os
 import re
 import json
 from contextlib import asynccontextmanager
 
-model = None
-tokenizer = None
+# Global variable for the model
+llm = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global model, tokenizer
-    model_path = "model/typhoon_fake_review_detector" 
-    print(f"Loading model from {model_path}..")
+    global llm
+    model_path = "model/typhoon2.5-qwen3-4b.Q4_K_M.gguf" # Path to your GGUF file
+    
+    print(f"Loading GGUF model from {model_path}...")
     try:
-        model, tokenizer = FastLanguageModel.from_pretrained(
-            model_name = model_path,
-            max_seq_length = 2048,
-            dtype = None,
-            load_in_4bit = True,
+        # n_gpu_layers=-1 means "use as many GPU layers as possible"
+        # n_ctx=2048 matches your training context length
+        llm = Llama(
+            model_path=model_path,
+            n_gpu_layers=-1, 
+            n_ctx=2048,
+            verbose=False
         )
-        FastLanguageModel.for_inference(model)
         print("Model loaded successfully.")
     except Exception as e:
-        print(f"Error loading model: {e}") 
+        print(f"Error loading model: {e}")
+        print("Make sure 'typhoon2.5-qwen3-4b.Q4_K_M.gguf' exists in the 'prod/model' directory!")
+    
     yield
+    
     print("Shutting down...")
-    model = None
-    tokenizer = None
+    llm = None
 
 app = FastAPI(lifespan=lifespan)
 
@@ -45,7 +48,7 @@ class ReviewResponse(BaseModel):
 
 @app.post("/predict", response_model=ReviewResponse)
 async def predict(request: ReviewRequest):
-    if not model or not tokenizer:
+    if not llm:
         raise HTTPException(status_code=503, detail="Model not loaded")
 
     system_prompt = """You are an expert fraud detection AI. Analyze the product review and determine if it is genuine or fake.
@@ -57,45 +60,37 @@ Do not output any text outside the JSON object."""
     
     user_content = f"""PRODUCT_TITLE: \"{request.product_title}\"\nREVIEW_TITLE: \"{request.review_title}\"\nREVIEW_BODY: \"{request.review_text}\" """
 
+    # llama-cpp-python handles chat templates automatically!
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_content}
     ]
 
-    inputs = tokenizer.apply_chat_template(
-        messages,
-        tokenize = True,
-        add_generation_prompt = True,
-        return_tensors = "pt",
-    ).to("cuda")
-
-    outputs = model.generate(
-        input_ids = inputs,
-        max_new_tokens = 128,
-        use_cache = True,
-        temperature = 0.1,
+    # Run Inference
+    response = llm.create_chat_completion(
+        messages=messages,
+        temperature=0.1,
+        max_tokens=128,
+        response_format={
+            "type": "json_object" # Enforces valid JSON output (supported by GGUF!)
+        }
     )
-    decoded_output = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0]
-    
-    if "assistant" in decoded_output:
-        response_text = decoded_output.split("assistant")[-1].strip()
-    else:
 
-        prompt_text = tokenizer.decode(inputs[0], skip_special_tokens=True)
-        response_text = decoded_output[len(prompt_text):].strip()
+    response_text = response["choices"][0]["message"]["content"]
+    
+    # Parse the result
     is_fake = False
     confidence = 0.0
     
     try:
-        json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
-        if json_match:
-            json_data = json.loads(json_match.group(0))
-            is_fake = json_data.get("isFake", False)
-            if isinstance(is_fake, str):
-                is_fake = is_fake.lower() == "true"
-            confidence = float(json_data.get("confidence", 0.0))
+        json_data = json.loads(response_text)
+        is_fake = json_data.get("isFake", False)
+        if isinstance(is_fake, str):
+            is_fake = is_fake.lower() == "true"
+        confidence = float(json_data.get("confidence", 0.0))
     except Exception as e:
         print(f"Parsing error: {e}")
+    
     return ReviewResponse(
         is_fake=is_fake,
         confidence=confidence,
@@ -104,4 +99,4 @@ Do not output any text outside the JSON object."""
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "model_loaded": model is not None}
+    return {"status": "ok", "model_loaded": llm is not None}
