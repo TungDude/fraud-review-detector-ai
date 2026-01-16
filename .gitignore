@@ -41,3 +41,5 @@ yarn-error.log*
 #Dataset
 apps/model/dataset/**
 apps/model/dev/model/**
+
+typhoon_fake_review_detector
